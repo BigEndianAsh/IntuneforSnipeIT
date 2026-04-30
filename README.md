@@ -1,3 +1,38 @@
-# IntuneforSnipeIT
+# Intune to Snipe-IT Device Sync
 
-The script is a Python-based automation tool designed to synchronize device data from Microsoft Intune to Snipe-IT. It ensures that your IT asset management system stays up to date with the hardware currently managed in your mobile device management (MDM) environment.  Here is a detailed breakdown of its operations:1. Authentication and Data RetrievalMicrosoft Graph API: The script starts by authenticating with Azure using client credentials to obtain an OAuth2 token.  Device Fetching: It queries the Intune Graph API to collect a list of all "managed devices," specifically requesting details like serial numbers, manufacturers, models, operating systems, and Intune unique IDs.  2. Environment Setup in Snipe-ITBefore processing devices, the script ensures the Snipe-IT environment is ready by checking for (or creating) several key resources:Status Labels: It finds or creates a status label (e.g., "Deployed") to mark synced assets as active.  Custom Fields: It creates a specific custom field for the Intune Device ID.  Fieldsets: It groups the custom field into a dedicated "Intune Devices" fieldset and ensures it is assigned to all relevant asset models.  3. Intelligent CategorizationThe script uses logic to sort devices into specific Snipe-IT categories based on their hardware properties:Windows Devices: Mapped to the Laptops category.  Android Devices: Mapped to the Phones category.  iOS/iPad Splitting: Because modern Apple mobile devices often report simply as "iOS," the script looks at the hardware model string. If "iPad" is in the model name, it assigns the Tablets category; if "iPhone" is found, it assigns Phones.  Fallback: Any device that doesn't match these rules is placed in a general Intune Devices category.  4. Asset Matching and SynchronizationFor every device found in Intune, the script performs the following actions:Serial Number Matching: It searches Snipe-IT for an existing asset with the same serial number.  Creation vs. Update:If the asset exists, it updates the record with the latest information from Intune.  If the asset does not exist, it creates a new hardware record.  Model Management: It automatically creates or updates hardware models, ensuring they are linked to the correct manufacturer and category.  Clickable Deep Links: The Intune Device ID is saved as a clickable HTML link. When viewed in Snipe-IT, an administrator can click this ID to open that specific device's management page directly in the Microsoft Intune portal.  5. Automation SafeguardsStrict Matching: To prevent duplication, the script uses strict string matching for categories and manufacturers.  Model Correction: If a device model was previously assigned to the wrong category (e.g., a laptop was accidentally categorized as a phone), the script detects this and "patches" the model to the correct category automatically.  Rate Limiting: It includes small pauses (time.sleep) between API calls to avoid hitting rate limits on the Snipe-IT server.  
+This Python script automates the synchronization of hardware assets from **Microsoft Intune** to **Snipe-IT**. It ensures your asset management database stays current with your MDM-managed devices.
+
+## 🚀 Features
+
+*   **Intelligent Categorization**: 
+    *   Windows devices map to `Laptops`.
+    *   Android devices map to `Phones`.
+    *   iOS devices are split by model: `iPads` to `Tablets` and `iPhones` to `Phones`[cite: 1].
+*   **Deep Linking**: The Intune Device ID is stored as a clickable HTML link in Snipe-IT for one-click access to the Intune portal[cite: 1].
+*   **Automated Matching**: Matches devices based on Serial Number to prevent duplicate records[cite: 1].
+*   **Asset Management**: Automatically creates/updates Categories, Manufacturers, and Models as needed[cite: 1].
+*   **Model Correction**: If a device model is in the wrong category, the script "patches" it to the correct one[cite: 1].
+
+## 🛠️ Setup
+
+### Prerequisites
+* Python 3.x
+* `requests` library (`pip install requests`)
+
+### Azure Configuration
+1. Register an App in the **Azure Portal** (App Registrations).
+2. Grant `DeviceManagementManagedDevices.Read.All` Graph API permissions.
+3. Generate a **Client Secret**.
+
+### Snipe-IT Configuration
+1. Generate a **Personal Access Token** in your Snipe-IT user settings.
+
+## ⚙️ Configuration
+
+Edit the script variables at the top of the file:
+```python
+AZURE_TENANT_ID     = "your-tenant-id"
+AZURE_CLIENT_ID     = "your-client-id"
+AZURE_CLIENT_SECRET = "your-client-secret"
+SNIPEIT_URL         = "[https://your-snipeit.example.com](https://your-snipeit.example.com)"
+SNIPEIT_API_TOKEN   = "your-token"
