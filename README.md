@@ -20,6 +20,3 @@ The script follows a specific hierarchy to ensure data integrity:
 2.  **Resource Check**: Verifies Status Labels, Fieldsets, and Custom Fields[cite: 1].
 3.  **Process Devices**: Iterates through Intune devices, calculates the target category, and performs a search-or-create for the Model[cite: 1].
 4.  **Sync**: Updates existing assets or creates new ones with the deep link attached[cite: 1].
-
-## 📄 License
-This project is licensed under the MIT License.
