@@ -25,7 +25,7 @@ The script requires access to the Microsoft Graph API to read device data.
 ## 4. Script Setup
 1.  **Clone the repository**:
     ```bash
-    git clone [https://github.com/your-repo/intune-snipeit-sync.git](https://github.com/your-repo/intune-snipeit-sync.git)
+    git clone [https://github.com/BigEndianAsh/IntuneforSnipeIT/intune-snipeit-sync.git](https://github.com/your-repo/intune-snipeit-sync.git)
     cd intune-snipeit-sync
     ```
 2.  **Install dependencies**:
