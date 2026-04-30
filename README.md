@@ -1,38 +1,25 @@
-# Intune to Snipe-IT Device Sync
+# Intune to Snipe-IT Asset Sync
 
-This Python script automates the synchronization of hardware assets from **Microsoft Intune** to **Snipe-IT**. It ensures your asset management database stays current with your MDM-managed devices.
+An automated synchronization tool that fetches managed devices from **Microsoft Intune** and populates them into **Snipe-IT** via the Graph API and Snipe-IT API.
 
-## 🚀 Features
+## 🚀 Key Features
 
-*   **Intelligent Categorization**: 
-    *   Windows devices map to `Laptops`.
-    *   Android devices map to `Phones`.
-    *   iOS devices are split by model: `iPads` to `Tablets` and `iPhones` to `Phones`[cite: 1].
-*   **Deep Linking**: The Intune Device ID is stored as a clickable HTML link in Snipe-IT for one-click access to the Intune portal[cite: 1].
-*   **Automated Matching**: Matches devices based on Serial Number to prevent duplicate records[cite: 1].
-*   **Asset Management**: Automatically creates/updates Categories, Manufacturers, and Models as needed[cite: 1].
-*   **Model Correction**: If a device model is in the wrong category, the script "patches" it to the correct one[cite: 1].
+*   **Smart Categorization**:
+    *   **Windows**: Automatically assigned to `Laptops`[cite: 1].
+    *   **Android**: Automatically assigned to `Phones`[cite: 1].
+    *   **iOS/iPadOS**: Dynamically splits based on hardware model; `iPad` models go to `Tablets`, while `iPhone` models go to `Phones`[cite: 1].
+*   **Direct Portal Linking**: The Intune Device ID is stored as a clickable HTML link in Snipe-IT, allowing you to jump directly to the device management blade in the Intune portal[cite: 1].
+*   **Duplicate Prevention**: Matches assets strictly by Serial Number to ensure clean data[cite: 1].
+*   **Auto-Provisioning**: Automatically creates Categories, Manufacturers, and Models in Snipe-IT if they do not already exist[cite: 1].
+*   **Model Correction**: If a hardware model’s category is updated (e.g., a generic device is identified as a Laptop), the script "patches" the existing model record in Snipe-IT[cite: 1].
 
-## 🛠️ Setup
+## 📊 Logic Overview
 
-### Prerequisites
-* Python 3.x
-* `requests` library (`pip install requests`)
+The script follows a specific hierarchy to ensure data integrity:
+1.  **Auth**: Authenticates with Microsoft Graph and Snipe-IT[cite: 1].
+2.  **Resource Check**: Verifies Status Labels, Fieldsets, and Custom Fields[cite: 1].
+3.  **Process Devices**: Iterates through Intune devices, calculates the target category, and performs a search-or-create for the Model[cite: 1].
+4.  **Sync**: Updates existing assets or creates new ones with the deep link attached[cite: 1].
 
-### Azure Configuration
-1. Register an App in the **Azure Portal** (App Registrations).
-2. Grant `DeviceManagementManagedDevices.Read.All` Graph API permissions.
-3. Generate a **Client Secret**.
-
-### Snipe-IT Configuration
-1. Generate a **Personal Access Token** in your Snipe-IT user settings.
-
-## ⚙️ Configuration
-
-Edit the script variables at the top of the file:
-```python
-AZURE_TENANT_ID     = "your-tenant-id"
-AZURE_CLIENT_ID     = "your-client-id"
-AZURE_CLIENT_SECRET = "your-client-secret"
-SNIPEIT_URL         = "[https://your-snipeit.example.com](https://your-snipeit.example.com)"
-SNIPEIT_API_TOKEN   = "your-token"
+## 📄 License
+This project is licensed under the MIT License.
